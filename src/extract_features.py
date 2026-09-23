@@ -2,9 +2,6 @@ import numpy as np
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-from pathlib import Path
-
-directory = Path("C:/Users/anton/OneDrive/Documents/GitHub/audio_machine_learning/Data/genres_original")
 
 def get_feature(file_path):
   y, sr = librosa.load(file_path)
@@ -39,27 +36,3 @@ def get_feature(file_path):
 
   feature = np.concatenate( (chroma_feature, melspectrogram_feature, mfcc_feature, tntz_feature) )
   return feature
-
-genres = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae','rock']
-features = []
-labels = []
-failed_files = []
-for genre in genres:
-    print("Calculating features for genre : " + genre)
-    genre_dir = directory / genre
-    for file_path in genre_dir.iterdir():
-        try :
-            feature = get_feature(file_path)
-            features.append(feature)
-            label = genres.index(genre)
-            labels.append(label)
-        except Exception as e:
-            print(f'Error in file {file_path}. The file has been skipped')
-            failed_files.append(file_path)
-
-print()
-print(f"Extraction terminee : {len(features)} fichiers traites avec succes, {len(failed_files)} en erreur.")
-if failed_files:
-    print("Fichiers en erreur :")
-    for f in failed_files:
-        print(f"  - {f}")
